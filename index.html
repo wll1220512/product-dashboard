@@ -1,872 +1,292 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>产品需求迭代看板 - 学分商城</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg-primary: #FAFBFD;
-  --bg-card: #FFFFFF;
-  --bg-hover: #F4F6FA;
-  --border-light: #E8ECF4;
-  --border-subtle: #F0F2F7;
-  --text-primary: #1A2138;
-  --text-secondary: #5E6B82;
-  --text-muted: #8E99AE;
-  --status-launched: #22C993;
-  --status-launched-bg: #E6FAF3;
-  --status-dev: #3B8DF5;
-  --status-dev-bg: #EBF4FF;
-  --status-review: #7C6FF7;
-  --status-review-bg: #F3F1FE;
-  --status-planned: #F59E42;
-  --status-planned-bg: #FEF5E7;
-  --status-hold: #A0AEC0;
-  --status-hold-bg: #F1F3F7;
-  --priority-p0: #F25C6E;
-  --priority-p1: #F59E42;
-  --priority-p2: #3B8DF5;
-  --shadow-sm: 0 1px 3px rgba(26, 33, 56, 0.04);
-  --shadow-md: 0 4px 12px rgba(26, 33, 56, 0.06);
-  --shadow-lg: 0 8px 24px rgba(26, 33, 56, 0.08);
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-}
-
-.dashboard {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 40px 48px;
-}
-
-.header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.header-left h1 {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-}
-
-.header-left p {
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.header-right {
-  display: flex;
-  gap: 10px;
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  box-shadow: var(--shadow-sm);
-}
-
-.badge .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-
-.badge .dot.green { background: var(--status-launched); }
-.badge .dot.blue { background: var(--status-dev); }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  margin-bottom: 32px;
-}
-
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 18px 20px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-sm);
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-}
-
-.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-}
-
-.stat-card:nth-child(1)::before { background: var(--status-launched); }
-.stat-card:nth-child(2)::before { background: var(--status-dev); }
-.stat-card:nth-child(3)::before { background: var(--status-review); }
-.stat-card:nth-child(4)::before { background: var(--status-planned); }
-.stat-card:nth-child(5)::before { background: var(--status-hold); }
-
-.stat-card:nth-child(1) { animation-delay: 0.05s; }
-.stat-card:nth-child(2) { animation-delay: 0.1s; }
-.stat-card:nth-child(3) { animation-delay: 0.15s; }
-.stat-card:nth-child(4) { animation-delay: 0.2s; }
-.stat-card:nth-child(5) { animation-delay: 0.25s; }
-
-.stat-label {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
-  letter-spacing: 0.3px;
-  margin-bottom: 6px;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.stat-suffix {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-muted);
-  margin-left: 2px;
-}
-
-.main-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.version-group {
-  border-bottom: 1px solid var(--border-light);
-}
-
-.version-group:last-child { border-bottom: none; }
-
-.version-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #F8F9FC 0%, #F4F6FA 100%);
-  border-bottom: 1px solid var(--border-subtle);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.version-header:hover {
-  background: linear-gradient(135deg, #F2F4F9 0%, #EEF1F7 100%);
-}
-
-.version-header-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.version-tag {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 4px;
-}
-
-.version-tag.launched { background: var(--status-launched-bg); color: var(--status-launched); }
-.version-tag.dev { background: var(--status-dev-bg); color: var(--status-dev); }
-.version-tag.review { background: var(--status-review-bg); color: var(--status-review); }
-.version-tag.planned { background: var(--status-planned-bg); color: var(--status-planned); }
-
-.version-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.version-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-left: 4px;
-}
-
-.version-header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.progress-bar {
-  width: 140px;
-  height: 6px;
-  background: #EEF1F7;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.progress-text {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  min-width: 36px;
-  text-align: right;
-}
-
-.feature-row {
-  display: grid;
-  grid-template-columns: 1fr 100px 120px 180px;
-  align-items: center;
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background 0.2s;
-  animation: fadeInUp 0.4s ease forwards;
-  opacity: 0;
-}
-
-.feature-row:last-child { border-bottom: none; }
-.feature-row:hover { background: var(--bg-hover); }
-
-.feature-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.priority-bar {
-  width: 3px;
-  height: 20px;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-.priority-bar.p0 { background: var(--priority-p0); }
-.priority-bar.p1 { background: var(--priority-p1); }
-.priority-bar.none { background: var(--border-light); }
-
-.feature-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
-  line-height: 1.4;
-}
-
-.feature-priority {
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.feature-priority .tag {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-size: 11px;
-}
-
-.tag.p0 { background: #FEF0F1; color: var(--priority-p0); }
-.tag.p1 { background: #FEF5E7; color: var(--priority-p1); }
-
-.feature-date {
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-}
-
-.feature-status {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status-badge .status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-}
-
-.status-badge.launched { background: var(--status-launched-bg); color: var(--status-launched); }
-.status-badge.launched .status-dot { background: var(--status-launched); }
-.status-badge.dev { background: var(--status-dev-bg); color: var(--status-dev); }
-.status-badge.dev .status-dot { background: var(--status-dev); animation: pulse 2s infinite; }
-.status-badge.review { background: var(--status-review-bg); color: var(--status-review); }
-.status-badge.review .status-dot { background: var(--status-review); }
-.status-badge.planned { background: var(--status-planned-bg); color: var(--status-planned); }
-.status-badge.planned .status-dot { background: var(--status-planned); }
-.status-badge.hold { background: var(--status-hold-bg); color: var(--status-hold); }
-.status-badge.hold .status-dot { background: var(--status-hold); }
-
-.col-header {
-  display: grid;
-  grid-template-columns: 1fr 100px 120px 180px;
-  padding: 12px 24px;
-  background: var(--bg-hover);
-  border-bottom: 1px solid var(--border-light);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.col-header span:nth-child(2),
-.col-header span:nth-child(3) { text-align: center; }
-.col-header span:nth-child(4) { text-align: right; }
-
-.pool-section {
-  margin-top: 24px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.pool-header {
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #FEF5E7 0%, #FEF0F1 100%);
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pool-header h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.pool-header .count {
-  font-size: 11px;
-  background: white;
-  padding: 2px 8px;
-  border-radius: 10px;
-  color: var(--priority-p1);
-  font-weight: 600;
-}
-
-.pool-item {
-  padding: 14px 24px;
-  border-bottom: 1px solid var(--border-subtle);
-  display: grid;
-  grid-template-columns: 1fr 200px 80px;
-  align-items: start;
-  gap: 16px;
-}
-
-.pool-item:last-child { border-bottom: none; }
-
-.pool-item-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.pool-item-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.pool-item-value {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.pool-item-priority {
-  text-align: right;
-}
-
-.footer {
-  margin-top: 20px;
-  padding: 12px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.legend {
-  display: flex;
-  gap: 16px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.legend-dot.launched { background: var(--status-launched); }
-.legend-dot.dev { background: var(--status-dev); }
-.legend-dot.review { background: var(--status-review); }
-.legend-dot.planned { background: var(--status-planned); }
-.legend-dot.hold { background: var(--status-hold); }
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 900px) {
-  .dashboard { padding: 24px 16px; }
-  .stats-row { grid-template-columns: repeat(3, 1fr); }
-  .feature-row { grid-template-columns: 1fr 80px 140px; }
-  .feature-date { display: none; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App产品功能需求及迭代进展看板</title>
+    <style>
+        :root {
+            --bg-primary: #f8f9fc;
+            --bg-card: #ffffff;
+            --text-primary: #1a1d23;
+            --text-secondary: #5f6368;
+            --text-muted: #9aa0a6;
+            --border: #e8eaed;
+            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
+            --accent: #4285f4;
+            --success: #34a853;
+            --warning: #fbbc04;
+            --danger: #ea4335;
+            --purple: #9c27b0;
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 24px;
+            min-height: 100vh;
+        }
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        .dashboard-header h1 { font-size: 28px; font-weight: 700; position: relative; margin-bottom: 8px; }
+        .dashboard-header .subtitle { font-size: 14px; opacity: 0.85; position: relative; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .stat-number { font-size: 36px; font-weight: 700; margin-bottom: 4px; }
+        .stat-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+        .stat-card.total .stat-number { color: var(--accent); }
+        .stat-card.online .stat-number { color: var(--success); }
+        .stat-card.dev .stat-number { color: var(--warning); }
+        .stat-card.review .stat-number { color: var(--purple); }
+        .stat-card.pending .stat-number { color: var(--text-muted); }
+        .stat-card.paused .stat-number { color: var(--danger); }
+        .progress-bar-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .progress-bar-container h3 { margin-bottom: 16px; font-size: 16px; }
+        .progress-bar {
+            height: 28px;
+            background: #f1f3f4;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+        }
+        .progress-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+        .progress-segment.online { background: var(--success); }
+        .progress-segment.dev { background: var(--warning); }
+        .progress-segment.review { background: var(--purple); }
+        .progress-segment.paused { background: var(--danger); }
+        .progress-segment.unplanned { background: #dadce0; color: var(--text-secondary); }
+        .progress-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .version-sections { display: flex; flex-direction: column; gap: 24px; }
+        .version-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .version-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .version-header h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .version-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+        .version-badge.cat-base { background: #e8f0fe; color: #1967d2; }
+        .version-badge.cat-market { background: #fce8e6; color: #c5221f; }
+        .version-badge.cat-after { background: #e6f4ea; color: #137333; }
+        .version-progress { font-size: 12px; color: var(--text-muted); }
+        .requirement-list { padding: 8px 0; }
+        .requirement-item {
+            padding: 12px 20px;
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.2s;
+        }
+        .requirement-item:last-child { border-bottom: none; }
+        .requirement-item:hover { background: #fafbfc; }
+        .req-name { font-size: 13px; color: var(--text-primary); font-weight: 450; }
+        .req-priority { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600; min-width: 28px; text-align: center; }
+        .req-priority.p0 { background: #fce8e6; color: #c5221f; }
+        .req-priority.p1 { background: #fef7e0; color: #e37400; }
+        .req-priority.none { background: transparent; }
+        .req-status { font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 500; white-space: nowrap; }
+        .req-status.online { background: #e6f4ea; color: #137333; }
+        .req-status.dev { background: #fef7e0; color: #e37400; }
+        .req-status.review { background: #f3e8fd; color: #7b1fa2; }
+        .req-status.paused { background: #fce8e6; color: #c5221f; }
+        .req-status.unplanned { background: #f1f3f4; color: #5f6368; }
+        .req-timeline { font-size: 12px; color: var(--text-muted); min-width: 60px; text-align: right; }
+        .update-time { text-align: center; padding: 16px; color: var(--text-muted); font-size: 12px; }
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-card { padding: 12px; }
+            .stat-number { font-size: 24px; }
+            .requirement-item { grid-template-columns: 1fr auto; gap: 8px; }
+            .req-timeline, .req-priority { display: none; }
+        }
+    </style>
 </head>
 <body>
-
-<div class="dashboard">
-  <div class="header">
-    <div class="header-left">
-      <h1>学分商城 · 需求迭代看板</h1>
-      <p>产品需求进度总览 · 数据来源：腾讯文档 · 更新于 2026年05月28日</p>
+    <div class="dashboard-header">
+        <h1>App产品功能需求及迭代进展</h1>
+        <div class="subtitle">学分商城 · 需求产研进度追踪</div>
     </div>
-    <div class="header-right">
-      <div class="badge"><span class="dot blue"></span>当前迭代 基础治理V1.2</div>
-      <div class="badge"><span class="dot green"></span>已上线 7 项</div>
+    <div class="stats-grid">
+        <div class="stat-card total"><div class="stat-number">24</div><div class="stat-label">需求总数</div></div>
+        <div class="stat-card online"><div class="stat-number">7</div><div class="stat-label">已上线</div></div>
+        <div class="stat-card dev"><div class="stat-number">2</div><div class="stat-label">开发中</div></div>
+        <div class="stat-card review"><div class="stat-number">4</div><div class="stat-label">已内审/待评审</div></div>
+        <div class="stat-card pending"><div class="stat-number">10</div><div class="stat-label">未规划</div></div>
+        <div class="stat-card paused"><div class="stat-number">1</div><div class="stat-label">挂起</div></div>
     </div>
-  </div>
-
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">已上线</div>
-      <div class="stat-value">7<span class="stat-suffix">项</span></div>
+    <div class="progress-bar-container">
+        <h3>整体进度</h3>
+        <div class="progress-bar">
+            <div class="progress-segment online" style="width: 29.2%">29%</div>
+            <div class="progress-segment dev" style="width: 8.3%"></div>
+            <div class="progress-segment review" style="width: 16.7%">17%</div>
+            <div class="progress-segment paused" style="width: 4.2%"></div>
+            <div class="progress-segment unplanned" style="width: 41.6%">42%</div>
+        </div>
+        <div class="progress-legend">
+            <div class="legend-item"><div class="legend-dot" style="background: var(--success)"></div>已上线 (7)</div>
+            <div class="legend-item"><div class="legend-dot" style="background: var(--warning)"></div>开发中 (2)</div>
+            <div class="legend-item"><div class="legend-dot" style="background: var(--purple)"></div>已内审/待评审 (4)</div>
+            <div class="legend-item"><div class="legend-dot" style="background: var(--danger)"></div>挂起 (1)</div>
+            <div class="legend-item"><div class="legend-dot" style="background: #dadce0"></div>未规划 (10)</div>
+        </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">开发中</div>
-      <div class="stat-value">2<span class="stat-suffix">项</span></div>
+    <div class="version-sections">
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-base">基础能力</span> 自研学分商城</h3>
+                <span class="version-progress">2/2 已上线</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">学分商城替换自研实物商城</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">学分商城支持支付能力（支付宝）</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">4.17</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.0</h3>
+                <span class="version-progress">3/3 已上线</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">手动支持学分扣减</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">实物商品订单增加部分字段（主订单ID、spu、sku名称筛选）、导出数据</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">5.8</span></div>
+                <div class="requirement-item"><span class="req-name">学分商城库存能力（业务端先闭环）</span><span class="req-priority p0">P0</span><span class="req-status online">已上线</span><span class="req-timeline">5.8</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.1</h3>
+                <span class="version-progress">1/2 已上线 · 1 挂起</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">学分商城支持支付能力（h5微信）</span><span class="req-priority none"></span><span class="req-status paused">挂起</span><span class="req-timeline">5.13</span></div>
+                <div class="requirement-item"><span class="req-name">app签到埋点补充（首页入口区分类型及实验组和对照组）</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">5.13</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.2</h3>
+                <span class="version-progress">2 开发中 · 2 待评审 · 1 未规划</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">学分商城&详情页支持分享（增加'活动限定'标识）</span><span class="req-priority none"></span><span class="req-status dev">开发中</span><span class="req-timeline">6.3/6.8</span></div>
+                <div class="requirement-item"><span class="req-name">学分商城接入微信app原生支付能力</span><span class="req-priority p0">P0</span><span class="req-status dev">开发中</span><span class="req-timeline">6.8</span></div>
+                <div class="requirement-item"><span class="req-name">学分商城接入支付宝app原生支付能力</span><span class="req-priority p0">P0</span><span class="req-status review">已内审，待评审</span><span class="req-timeline">6月</span></div>
+                <div class="requirement-item"><span class="req-name">学分商城报表&埋点补充</span><span class="req-priority p1">P1</span><span class="req-status review">已内审，待评审</span><span class="req-timeline">6月</span></div>
+                <div class="requirement-item"><span class="req-name">学分商城区分入口参数</span><span class="req-priority p1">P1</span><span class="req-status unplanned">未规划</span><span class="req-timeline">5月</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.3</h3>
+                <span class="version-progress">1 待评审 · 1 未规划</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">学分商城详情页改版，支持多规格（sku）选择及单商品多次购买</span><span class="req-priority p0">P0</span><span class="req-status review">已内审，待评审</span><span class="req-timeline">6月</span></div>
+                <div class="requirement-item"><span class="req-name">实物+虚拟商品组合（买实物后强制领取课程）</span><span class="req-priority p1">P1</span><span class="req-status unplanned">未规划</span><span class="req-timeline">6月</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.4</h3>
+                <span class="version-progress">已内审</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">鸿蒙系统支持华为帐户登录，支持鸿蒙系统用户使用微信支付方式下单</span><span class="req-priority p0">P0</span><span class="req-status review">已内审</span><span class="req-timeline">6月</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-after">基础能力</span> 用户线上自主售后</h3>
+                <span class="version-progress">2 未规划</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">业务端仅售后能力（仅退款，用户端和系统端）</span><span class="req-priority p0">P0</span><span class="req-status unplanned">未规划</span><span class="req-timeline">6月</span></div>
+                <div class="requirement-item"><span class="req-name">售后能力（退款退货、换货）</span><span class="req-priority p0">P0</span><span class="req-status unplanned">未规划</span><span class="req-timeline">6月</span></div>
+            </div>
+        </div>
+        <div class="version-section">
+            <div class="version-header">
+                <h3><span class="version-badge cat-market">商城营销玩法</span> 兑换实物赠课 & 营销工具</h3>
+                <span class="version-progress">1/7 已上线 · 6 未规划</span>
+            </div>
+            <div class="requirement-list">
+                <div class="requirement-item"><span class="req-name">学分商城增加用户兑换实物商品礼包（弹窗赠课）</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">5.8</span></div>
+                <div class="requirement-item"><span class="req-name">商品精细化区分，折扣/福利专区建设，商品分类tab</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">商品组件：划线价、活动倒计时、限时抢购、名额剩余</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">学分商城增加banner广告位</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">积分获取导流路径（引导参加任务获取积分）</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">抽奖工具</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
+                <div class="requirement-item"><span class="req-name">其他（需与业务共识策略，倒推产品功能需求）</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
+            </div>
+        </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">待评审</div>
-      <div class="stat-value">4<span class="stat-suffix">项</span></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">规划中</div>
-      <div class="stat-value">10<span class="stat-suffix">项</span></div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">挂起</div>
-      <div class="stat-value">1<span class="stat-suffix">项</span></div>
-    </div>
-  </div>
-
-  <div class="main-section">
-    <div class="col-header">
-      <span>需求名称</span>
-      <span>优先级</span>
-      <span>预估上线</span>
-      <span>状态</span>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag dev">开发中</span>
-          <span class="version-name">基础治理V1.2</span>
-          <span class="version-desc">· 分享 &amp; 原生支付（当前迭代）</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 28%; background: linear-gradient(90deg, var(--status-dev), #6AABFF);"></div></div>
-          <span class="progress-text">28%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城&amp;详情页支持分享（增加兑换商品用户人群限定时候，增加'活动限定'标识）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">过度方案：6.3;完整方案：6.8</div>
-        <div class="feature-status"><span class="status-badge dev"><span class="status-dot"></span>开发中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城接入微信app原生支付能力</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">6.8</div>
-        <div class="feature-status"><span class="status-badge dev"><span class="status-dot"></span>开发中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.11s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城接入支付宝app原生支付能力</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审，待评审</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.14s">
-        <div class="feature-info">
-          <div class="priority-bar p1"></div>
-          <span class="feature-name">学分商城报表&amp;埋点补充（学分商城相关埋点先行——511已内审待评审）</span>
-        </div>
-        <div class="feature-priority"><span class="tag p1">p1</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审，待评审</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.17s">
-        <div class="feature-info">
-          <div class="priority-bar p1"></div>
-          <span class="feature-name">学分商城区分入口参数</span>
-        </div>
-        <div class="feature-priority"><span class="tag p1">p1</span></div>
-        <div class="feature-date">5月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag review">评审中</span>
-          <span class="version-name">基础治理V1.3</span>
-          <span class="version-desc">· 详情页改版 &amp; 组合商品</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 10%; background: linear-gradient(90deg, var(--status-review), #9B8FFF);"></div></div>
-          <span class="progress-text">10%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城详情页改版，支持多规格（sku）选择以及支持单商品多次购买（主图尺寸问题）</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审，待评审</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar p1"></div>
-          <span class="feature-name">实物+虚拟商品组合（买实物后强制领取课程，用户兑换礼包赠送弹窗支持虚拟商品）</span>
-        </div>
-        <div class="feature-priority"><span class="tag p1">p1</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag review">评审中</span>
-          <span class="version-name">基础治理V1.4</span>
-          <span class="version-desc">· 鸿蒙适配</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 20%; background: linear-gradient(90deg, var(--status-review), #9B8FFF);"></div></div>
-          <span class="progress-text">20%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">鸿蒙系统支持华为帐户登录，支持鸿蒙系统用户使用微信支付方式下单</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag planned">规划中</span>
-          <span class="version-name">用户线上自主售后</span>
-          <span class="version-desc">· 退款退货换货能力</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 0%; background: var(--status-planned);"></div></div>
-          <span class="progress-text">0%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">业务端仅售后能力（仅退款，用户端和系统端）</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">售后能力（退款退货、换货）</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag launched">进行中</span>
-          <span class="version-name">兑换实物赠课</span>
-          <span class="version-desc">· 营销玩法 &amp; 运营工具</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 14%; background: var(--status-launched);"></div></div>
-          <span class="progress-text">14%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城增加用户兑换实物商品礼包（弹窗赠课）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5.8</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">商品精细化区分，折扣/福利专区建设， 商品分类tab：养生/变美/虚拟</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.11s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">商品组件：划线价、活动倒计时、商品名换行、限时抢购、名额剩余</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.14s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城增加banner广告位</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.17s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">积分获取导流路径（积分不足，引导参加任务获取积分）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.2s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">抽奖工具</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.23s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">其他（需与业务共识策略，倒推产品功能需求）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag launched">已完成</span>
-          <span class="version-name">基础治理V1.1</span>
-          <span class="version-desc">· 支付能力 &amp; 埋点</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 50%; background: var(--status-launched);"></div></div>
-          <span class="progress-text">50%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城支持支付能力（h5微信）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5.13</div>
-        <div class="feature-status"><span class="status-badge hold"><span class="status-dot"></span>挂起</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">app签到埋点补充（首页的入口区分类型及实验组和对照组、app签到页面pv、uv）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5.13</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag launched">已完成</span>
-          <span class="version-name">自研学分商城</span>
-          <span class="version-desc">· 学分商城基础能力</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--status-launched);"></div></div>
-          <span class="progress-text">100%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城替换自研实物商城</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城支持支付能力（支付宝）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">4.17</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-    </div>
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag launched">已完成</span>
-          <span class="version-name">基础治理V1.0</span>
-          <span class="version-desc">· 手动扣减 &amp; 订单字段 &amp; 库存</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--status-launched);"></div></div>
-          <span class="progress-text">100%</span>
-        </div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">手动支持学分扣减</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">-</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">实物商品订单增加部分字段（主订单ID、spu、sku名称筛选）、导出数据</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5.8</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-      <div class="feature-row" style="animation-delay:0.11s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城库存能力（业务端先闭环），等基建6月实现对接聚水潭库存能力再次更新</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">p0</span></div>
-        <div class="feature-date">5.8</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="pool-section">
-    <div class="pool-header">
-      <h3>业务需求提需池</h3>
-      <span class="count">待处理 1 项</span>
-    </div>
-    <div class="pool-item">
-      <div>
-        <div class="pool-item-title">订单状态：未发货;订单上支持客户/客服修改规格或收货信息</div>
-        <div class="pool-item-desc">目前订单提交后无法改地址，退款后同规格也无法重拍，客户只能干等6月新功能，体验差、投诉多</div>
-      </div>
-      <div class="pool-item-value">提需人：何祖聪<br>日期：2026年5月22日</div>
-      <div class="pool-item-priority"><span class="tag p0">P0</span></div>
-    </div>
-  </div>
-  <div class="footer">
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot launched"></div><span>已上线</span></div>
-      <div class="legend-item"><div class="legend-dot dev"></div><span>开发中</span></div>
-      <div class="legend-item"><div class="legend-dot review"></div><span>评审中</span></div>
-      <div class="legend-item"><div class="legend-dot planned"></div><span>规划中</span></div>
-      <div class="legend-item"><div class="legend-dot hold"></div><span>挂起</span></div>
-    </div>
-    <span>数据来源：企业微信文档 · 自动同步</span>
-  </div>
-</div>
-
+    <div class="update-time">数据更新时间：2026-05-28 · 数据来源：企业微信文档「需求产研进度」</div>
 </body>
 </html>
