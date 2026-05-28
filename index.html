@@ -51,7 +51,6 @@ body {
   padding: 40px 48px;
 }
 
-/* Header */
 .header {
   display: flex;
   align-items: flex-end;
@@ -108,7 +107,6 @@ body {
   50% { opacity: 0.4; }
 }
 
-/* Stats */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -171,7 +169,6 @@ body {
   margin-left: 2px;
 }
 
-/* Main Section */
 .main-section {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -180,7 +177,6 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
-/* Version Group */
 .version-group {
   border-bottom: 1px solid var(--border-light);
 }
@@ -260,7 +256,6 @@ body {
   text-align: right;
 }
 
-/* Feature Row */
 .feature-row {
   display: grid;
   grid-template-columns: 1fr 100px 120px 180px;
@@ -353,7 +348,6 @@ body {
 .status-badge.hold { background: var(--status-hold-bg); color: var(--status-hold); }
 .status-badge.hold .status-dot { background: var(--status-hold); }
 
-/* Column header */
 .col-header {
   display: grid;
   grid-template-columns: 1fr 100px 120px 180px;
@@ -371,7 +365,6 @@ body {
 .col-header span:nth-child(3) { text-align: center; }
 .col-header span:nth-child(4) { text-align: right; }
 
-/* Business Pool */
 .pool-section {
   margin-top: 24px;
   background: var(--bg-card);
@@ -438,7 +431,6 @@ body {
   text-align: right;
 }
 
-/* Footer */
 .footer {
   margin-top: 20px;
   padding: 12px 0;
@@ -488,23 +480,21 @@ body {
 <body>
 
 <div class="dashboard">
-  <!-- Header -->
   <div class="header">
     <div class="header-left">
       <h1>学分商城 · 需求迭代看板</h1>
-      <p>产品需求进度总览 · 数据来源：腾讯文档 · 更新于 2026年5月28日</p>
+      <p>产品需求进度总览 · 数据来源：腾讯文档 · 更新于 2026年05月28日</p>
     </div>
     <div class="header-right">
-      <div class="badge"><span class="dot blue"></span>当前迭代 V1.2</div>
-      <div class="badge"><span class="dot green"></span>已上线 8 项</div>
+      <div class="badge"><span class="dot blue"></span>当前迭代 基础治理V1.2</div>
+      <div class="badge"><span class="dot green"></span>已上线 7 项</div>
     </div>
   </div>
 
-  <!-- Stats -->
   <div class="stats-row">
     <div class="stat-card">
       <div class="stat-label">已上线</div>
-      <div class="stat-value">8<span class="stat-suffix">项</span></div>
+      <div class="stat-value">7<span class="stat-suffix">项</span></div>
     </div>
     <div class="stat-card">
       <div class="stat-label">开发中</div>
@@ -516,7 +506,7 @@ body {
     </div>
     <div class="stat-card">
       <div class="stat-label">规划中</div>
-      <div class="stat-value">6<span class="stat-suffix">项</span></div>
+      <div class="stat-value">10<span class="stat-suffix">项</span></div>
     </div>
     <div class="stat-card">
       <div class="stat-label">挂起</div>
@@ -524,7 +514,6 @@ body {
     </div>
   </div>
 
-  <!-- Main -->
   <div class="main-section">
     <div class="col-header">
       <span>需求名称</span>
@@ -532,233 +521,117 @@ body {
       <span>预估上线</span>
       <span>状态</span>
     </div>
-
-    <!-- 基础治理V1.0 -->
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag launched">已完成</span>
-          <span class="version-name">基础治理 V1.0</span>
-          <span class="version-desc">· 学分商城基础能力</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--status-launched);"></div></div>
-          <span class="progress-text">100%</span>
-        </div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城替换自研实物商城</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">已上线</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城支持支付能力（支付宝）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">4月17日</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.11s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">手动支持学分扣减</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">已上线</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.14s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">实物商品订单增加字段（主订单ID、SPU、SKU筛选）及导出</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5月8日</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.17s">
-        <div class="feature-info">
-          <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城库存能力（对接聚水潭，实时库存）</span>
-        </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
-        <div class="feature-date">5月8日</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-    </div>
-
-    <!-- 基础治理V1.1 -->
-    <div class="version-group">
-      <div class="version-header">
-        <div class="version-header-left">
-          <span class="version-tag launched">已完成</span>
-          <span class="version-name">基础治理 V1.1</span>
-          <span class="version-desc">· 支付能力 & 埋点</span>
-        </div>
-        <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 75%; background: linear-gradient(90deg, var(--status-launched), var(--status-hold));"></div></div>
-          <span class="progress-text">75%</span>
-        </div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.05s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城支持H5微信支付</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5月13日</div>
-        <div class="feature-status"><span class="status-badge hold"><span class="status-dot"></span>挂起</span></div>
-      </div>
-
-      <div class="feature-row" style="animation-delay:0.08s">
-        <div class="feature-info">
-          <div class="priority-bar none"></div>
-          <span class="feature-name">App签到埋点补充（入口区分 & 实验组标记）</span>
-        </div>
-        <div class="feature-priority"></div>
-        <div class="feature-date">5月13日</div>
-        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
-      </div>
-    </div>
-
-    <!-- 基础治理V1.2 当前 -->
     <div class="version-group">
       <div class="version-header">
         <div class="version-header-left">
           <span class="version-tag dev">开发中</span>
-          <span class="version-name">基础治理 V1.2</span>
-          <span class="version-desc">· 分享 & 原生支付（当前迭代）</span>
+          <span class="version-name">基础治理V1.2</span>
+          <span class="version-desc">· 分享 &amp; 原生支付（当前迭代）</span>
         </div>
         <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 30%; background: linear-gradient(90deg, var(--status-dev), #6AABFF);"></div></div>
-          <span class="progress-text">30%</span>
+          <div class="progress-bar"><div class="progress-fill" style="width: 28%; background: linear-gradient(90deg, var(--status-dev), #6AABFF);"></div></div>
+          <span class="progress-text">28%</span>
         </div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.05s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
-          <span class="feature-name">学分商城 & 详情页分享功能 + 活动限定标识</span>
+          <span class="feature-name">学分商城&amp;详情页支持分享（增加兑换商品用户人群限定时候，增加'活动限定'标识）</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">过渡6.3 / 完整6.8</div>
+        <div class="feature-date">过度方案：6.3;完整方案：6.8</div>
         <div class="feature-status"><span class="status-badge dev"><span class="status-dot"></span>开发中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.08s">
         <div class="feature-info">
           <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城接入微信App原生支付</span>
+          <span class="feature-name">学分商城接入微信app原生支付能力</span>
         </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
-        <div class="feature-date">6月8日</div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
+        <div class="feature-date">6.8</div>
         <div class="feature-status"><span class="status-badge dev"><span class="status-dot"></span>开发中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.11s">
         <div class="feature-info">
           <div class="priority-bar p0"></div>
-          <span class="feature-name">学分商城接入支付宝App原生支付</span>
+          <span class="feature-name">学分商城接入支付宝app原生支付能力</span>
         </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
         <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审待评审</span></div>
+        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审，待评审</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.14s">
         <div class="feature-info">
           <div class="priority-bar p1"></div>
-          <span class="feature-name">学分商城报表 & 埋点补充</span>
+          <span class="feature-name">学分商城报表&amp;埋点补充（学分商城相关埋点先行——511已内审待评审）</span>
         </div>
-        <div class="feature-priority"><span class="tag p1">P1</span></div>
-        <div class="feature-date">6月（埋点6.8）</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审待评审</span></div>
+        <div class="feature-priority"><span class="tag p1">p1</span></div>
+        <div class="feature-date">6月</div>
+        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审，待评审</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.17s">
         <div class="feature-info">
           <div class="priority-bar p1"></div>
-          <span class="feature-name">学分商城区分入口参数（渠道来源追踪）</span>
+          <span class="feature-name">学分商城区分入口参数</span>
         </div>
-        <div class="feature-priority"><span class="tag p1">P1</span></div>
+        <div class="feature-priority"><span class="tag p1">p1</span></div>
         <div class="feature-date">5月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>待定</span></div>
+        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
     </div>
-
-    <!-- 基础治理V1.3 -->
     <div class="version-group">
       <div class="version-header">
         <div class="version-header-left">
           <span class="version-tag review">评审中</span>
-          <span class="version-name">基础治理 V1.3</span>
-          <span class="version-desc">· 详情页改版 & 组合商品</span>
+          <span class="version-name">基础治理V1.3</span>
+          <span class="version-desc">· 详情页改版 &amp; 组合商品</span>
         </div>
         <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 15%; background: linear-gradient(90deg, var(--status-review), #9B8FFF);"></div></div>
-          <span class="progress-text">15%</span>
+          <div class="progress-bar"><div class="progress-fill" style="width: 10%; background: linear-gradient(90deg, var(--status-review), #9B8FFF);"></div></div>
+          <span class="progress-text">10%</span>
         </div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.05s">
         <div class="feature-info">
           <div class="priority-bar p0"></div>
-          <span class="feature-name">详情页改版：多规格SKU选择 & 单商品多次购买</span>
+          <span class="feature-name">学分商城详情页改版，支持多规格（sku）选择以及支持单商品多次购买（主图尺寸问题）</span>
         </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
         <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审待评审</span></div>
+        <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审，待评审</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.08s">
         <div class="feature-info">
           <div class="priority-bar p1"></div>
-          <span class="feature-name">实物+虚拟商品组合（礼包赠送弹窗支持虚拟商品）</span>
+          <span class="feature-name">实物+虚拟商品组合（买实物后强制领取课程，用户兑换礼包赠送弹窗支持虚拟商品）</span>
         </div>
-        <div class="feature-priority"><span class="tag p1">P1</span></div>
+        <div class="feature-priority"><span class="tag p1">p1</span></div>
         <div class="feature-date">6月</div>
         <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
     </div>
-
-    <!-- 基础治理V1.4 -->
     <div class="version-group">
       <div class="version-header">
         <div class="version-header-left">
           <span class="version-tag review">评审中</span>
-          <span class="version-name">基础治理 V1.4</span>
+          <span class="version-name">基础治理V1.4</span>
           <span class="version-desc">· 鸿蒙适配</span>
         </div>
         <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 10%; background: var(--status-review);"></div></div>
-          <span class="progress-text">10%</span>
+          <div class="progress-bar"><div class="progress-fill" style="width: 20%; background: linear-gradient(90deg, var(--status-review), #9B8FFF);"></div></div>
+          <span class="progress-text">20%</span>
         </div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.05s">
         <div class="feature-info">
           <div class="priority-bar p0"></div>
-          <span class="feature-name">鸿蒙系统支持华为帐户登录 + 微信支付下单</span>
+          <span class="feature-name">鸿蒙系统支持华为帐户登录，支持鸿蒙系统用户使用微信支付方式下单</span>
         </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
         <div class="feature-date">6月</div>
         <div class="feature-status"><span class="status-badge review"><span class="status-dot"></span>已内审</span></div>
       </div>
     </div>
-
-    <!-- 用户售后 -->
     <div class="version-group">
       <div class="version-header">
         <div class="version-header-left">
@@ -767,109 +640,208 @@ body {
           <span class="version-desc">· 退款退货换货能力</span>
         </div>
         <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 5%; background: var(--status-planned);"></div></div>
-          <span class="progress-text">5%</span>
+          <div class="progress-bar"><div class="progress-fill" style="width: 0%; background: var(--status-planned);"></div></div>
+          <span class="progress-text">0%</span>
         </div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.05s">
         <div class="feature-info">
           <div class="priority-bar p0"></div>
-          <span class="feature-name">业务端售后能力（仅退款，用户端+系统端）</span>
+          <span class="feature-name">业务端仅售后能力（仅退款，用户端和系统端）</span>
         </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
         <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>基建先行</span></div>
+        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.08s">
         <div class="feature-info">
           <div class="priority-bar p0"></div>
-          <span class="feature-name">完整售后能力（退款退货、换货）</span>
+          <span class="feature-name">售后能力（退款退货、换货）</span>
         </div>
-        <div class="feature-priority"><span class="tag p0">P0</span></div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
         <div class="feature-date">6月</div>
-        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>基建5月底</span></div>
+        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
     </div>
-
-    <!-- 商城营销玩法 -->
     <div class="version-group">
       <div class="version-header">
         <div class="version-header-left">
-          <span class="version-tag planned">规划中</span>
-          <span class="version-name">商城营销玩法</span>
-          <span class="version-desc">· 分类、组件、抽奖等运营工具</span>
+          <span class="version-tag launched">进行中</span>
+          <span class="version-name">兑换实物赠课</span>
+          <span class="version-desc">· 营销玩法 &amp; 运营工具</span>
         </div>
         <div class="version-header-right">
-          <div class="progress-bar"><div class="progress-fill" style="width: 15%; background: linear-gradient(90deg, var(--status-launched), var(--status-planned));"></div></div>
-          <span class="progress-text">15%</span>
+          <div class="progress-bar"><div class="progress-fill" style="width: 14%; background: var(--status-launched);"></div></div>
+          <span class="progress-text">14%</span>
         </div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.05s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
-          <span class="feature-name">兑换实物商品礼包（弹窗赠课）</span>
+          <span class="feature-name">学分商城增加用户兑换实物商品礼包（弹窗赠课）</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">5月8日</div>
+        <div class="feature-date">5.8</div>
         <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.08s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
-          <span class="feature-name">商品精细化区分 · 折扣/福利专区 · 分类Tab</span>
+          <span class="feature-name">商品精细化区分，折扣/福利专区建设， 商品分类tab：养生/变美/虚拟</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">待定</div>
+        <div class="feature-date">-</div>
         <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.11s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
-          <span class="feature-name">商品组件：划线价 / 活动倒计时 / 限时抢购 / 名额剩余</span>
+          <span class="feature-name">商品组件：划线价、活动倒计时、商品名换行、限时抢购、名额剩余</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">待定</div>
+        <div class="feature-date">-</div>
         <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.14s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
-          <span class="feature-name">Banner广告位</span>
+          <span class="feature-name">学分商城增加banner广告位</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">待定</div>
+        <div class="feature-date">-</div>
         <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.17s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
-          <span class="feature-name">积分获取导流路径（积分不足引导任务）</span>
+          <span class="feature-name">积分获取导流路径（积分不足，引导参加任务获取积分）</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">待定</div>
+        <div class="feature-date">-</div>
         <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
-
       <div class="feature-row" style="animation-delay:0.2s">
         <div class="feature-info">
           <div class="priority-bar none"></div>
           <span class="feature-name">抽奖工具</span>
         </div>
         <div class="feature-priority"></div>
-        <div class="feature-date">待定</div>
+        <div class="feature-date">-</div>
+        <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.23s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">其他（需与业务共识策略，倒推产品功能需求）</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">-</div>
         <div class="feature-status"><span class="status-badge planned"><span class="status-dot"></span>规划中</span></div>
       </div>
     </div>
+    <div class="version-group">
+      <div class="version-header">
+        <div class="version-header-left">
+          <span class="version-tag launched">已完成</span>
+          <span class="version-name">基础治理V1.1</span>
+          <span class="version-desc">· 支付能力 &amp; 埋点</span>
+        </div>
+        <div class="version-header-right">
+          <div class="progress-bar"><div class="progress-fill" style="width: 50%; background: var(--status-launched);"></div></div>
+          <span class="progress-text">50%</span>
+        </div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.05s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">学分商城支持支付能力（h5微信）</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">5.13</div>
+        <div class="feature-status"><span class="status-badge hold"><span class="status-dot"></span>挂起</span></div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.08s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">app签到埋点补充（首页的入口区分类型及实验组和对照组、app签到页面pv、uv）</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">5.13</div>
+        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
+      </div>
+    </div>
+    <div class="version-group">
+      <div class="version-header">
+        <div class="version-header-left">
+          <span class="version-tag launched">已完成</span>
+          <span class="version-name">自研学分商城</span>
+          <span class="version-desc">· 学分商城基础能力</span>
+        </div>
+        <div class="version-header-right">
+          <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--status-launched);"></div></div>
+          <span class="progress-text">100%</span>
+        </div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.05s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">学分商城替换自研实物商城</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">-</div>
+        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.08s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">学分商城支持支付能力（支付宝）</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">4.17</div>
+        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
+      </div>
+    </div>
+    <div class="version-group">
+      <div class="version-header">
+        <div class="version-header-left">
+          <span class="version-tag launched">已完成</span>
+          <span class="version-name">基础治理V1.0</span>
+          <span class="version-desc">· 手动扣减 &amp; 订单字段 &amp; 库存</span>
+        </div>
+        <div class="version-header-right">
+          <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--status-launched);"></div></div>
+          <span class="progress-text">100%</span>
+        </div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.05s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">手动支持学分扣减</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">-</div>
+        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.08s">
+        <div class="feature-info">
+          <div class="priority-bar none"></div>
+          <span class="feature-name">实物商品订单增加部分字段（主订单ID、spu、sku名称筛选）、导出数据</span>
+        </div>
+        <div class="feature-priority"></div>
+        <div class="feature-date">5.8</div>
+        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
+      </div>
+      <div class="feature-row" style="animation-delay:0.11s">
+        <div class="feature-info">
+          <div class="priority-bar p0"></div>
+          <span class="feature-name">学分商城库存能力（业务端先闭环），等基建6月实现对接聚水潭库存能力再次更新</span>
+        </div>
+        <div class="feature-priority"><span class="tag p0">p0</span></div>
+        <div class="feature-date">5.8</div>
+        <div class="feature-status"><span class="status-badge launched"><span class="status-dot"></span>已上线</span></div>
+      </div>
+    </div>
   </div>
-
-  <!-- 业务需求提需池 -->
   <div class="pool-section">
     <div class="pool-header">
       <h3>业务需求提需池</h3>
@@ -877,15 +849,13 @@ body {
     </div>
     <div class="pool-item">
       <div>
-        <div class="pool-item-title">订单支持修改规格/收货信息（未发货状态）</div>
-        <div class="pool-item-desc">订单提交后无法改地址，退款后同规格无法重拍，客户体验差、投诉多</div>
+        <div class="pool-item-title">订单状态：未发货;订单上支持客户/客服修改规格或收货信息</div>
+        <div class="pool-item-desc">目前订单提交后无法改地址，退款后同规格也无法重拍，客户只能干等6月新功能，体验差、投诉多</div>
       </div>
-      <div class="pool-item-value">提需人：何祖聪<br>日期：2026.5.22</div>
+      <div class="pool-item-value">提需人：何祖聪<br>日期：2026年5月22日</div>
       <div class="pool-item-priority"><span class="tag p0">P0</span></div>
     </div>
   </div>
-
-  <!-- Footer -->
   <div class="footer">
     <div class="legend">
       <div class="legend-item"><div class="legend-dot launched"></div><span>已上线</span></div>
