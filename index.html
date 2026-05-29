@@ -1,292 +1,172 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App产品功能需求及迭代进展看板</title>
-    <style>
-        :root {
-            --bg-primary: #f8f9fc;
-            --bg-card: #ffffff;
-            --text-primary: #1a1d23;
-            --text-secondary: #5f6368;
-            --text-muted: #9aa0a6;
-            --border: #e8eaed;
-            --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
-            --accent: #4285f4;
-            --success: #34a853;
-            --warning: #fbbc04;
-            --danger: #ea4335;
-            --purple: #9c27b0;
-            --radius: 12px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 24px;
-            min-height: 100vh;
-        }
-        .dashboard-header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding: 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: var(--radius);
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .dashboard-header::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-        .dashboard-header h1 { font-size: 28px; font-weight: 700; position: relative; margin-bottom: 8px; }
-        .dashboard-header .subtitle { font-size: 14px; opacity: 0.85; position: relative; }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        .stat-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: all 0.3s ease;
-            border: 1px solid var(--border);
-        }
-        .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-        .stat-number { font-size: 36px; font-weight: 700; margin-bottom: 4px; }
-        .stat-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
-        .stat-card.total .stat-number { color: var(--accent); }
-        .stat-card.online .stat-number { color: var(--success); }
-        .stat-card.dev .stat-number { color: var(--warning); }
-        .stat-card.review .stat-number { color: var(--purple); }
-        .stat-card.pending .stat-number { color: var(--text-muted); }
-        .stat-card.paused .stat-number { color: var(--danger); }
-        .progress-bar-container {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 32px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-        .progress-bar-container h3 { margin-bottom: 16px; font-size: 16px; }
-        .progress-bar {
-            height: 28px;
-            background: #f1f3f4;
-            border-radius: 14px;
-            overflow: hidden;
-            display: flex;
-        }
-        .progress-segment {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: white;
-        }
-        .progress-segment.online { background: var(--success); }
-        .progress-segment.dev { background: var(--warning); }
-        .progress-segment.review { background: var(--purple); }
-        .progress-segment.paused { background: var(--danger); }
-        .progress-segment.unplanned { background: #dadce0; color: var(--text-secondary); }
-        .progress-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
-        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
-        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .version-sections { display: flex; flex-direction: column; gap: 24px; }
-        .version-section {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-        .version-header {
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-        .version-header h3 { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .version-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
-        .version-badge.cat-base { background: #e8f0fe; color: #1967d2; }
-        .version-badge.cat-market { background: #fce8e6; color: #c5221f; }
-        .version-badge.cat-after { background: #e6f4ea; color: #137333; }
-        .version-progress { font-size: 12px; color: var(--text-muted); }
-        .requirement-list { padding: 8px 0; }
-        .requirement-item {
-            padding: 12px 20px;
-            display: grid;
-            grid-template-columns: 1fr auto auto auto;
-            gap: 12px;
-            align-items: center;
-            border-bottom: 1px solid #f5f5f5;
-            transition: background 0.2s;
-        }
-        .requirement-item:last-child { border-bottom: none; }
-        .requirement-item:hover { background: #fafbfc; }
-        .req-name { font-size: 13px; color: var(--text-primary); font-weight: 450; }
-        .req-priority { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 600; min-width: 28px; text-align: center; }
-        .req-priority.p0 { background: #fce8e6; color: #c5221f; }
-        .req-priority.p1 { background: #fef7e0; color: #e37400; }
-        .req-priority.none { background: transparent; }
-        .req-status { font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 500; white-space: nowrap; }
-        .req-status.online { background: #e6f4ea; color: #137333; }
-        .req-status.dev { background: #fef7e0; color: #e37400; }
-        .req-status.review { background: #f3e8fd; color: #7b1fa2; }
-        .req-status.paused { background: #fce8e6; color: #c5221f; }
-        .req-status.unplanned { background: #f1f3f4; color: #5f6368; }
-        .req-timeline { font-size: 12px; color: var(--text-muted); min-width: 60px; text-align: right; }
-        .update-time { text-align: center; padding: 16px; color: var(--text-muted); font-size: 12px; }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .stat-card { padding: 12px; }
-            .stat-number { font-size: 24px; }
-            .requirement-item { grid-template-columns: 1fr auto; gap: 8px; }
-            .req-timeline, .req-priority { display: none; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品需求进度看板</title>
+<style>
+:root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --muted: #94a3b8; --accent: #38bdf8; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+header { text-align: center; margin-bottom: 32px; }
+header h1 { font-size: 28px; margin-bottom: 8px; background: linear-gradient(90deg, var(--accent), #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+header p { color: var(--muted); font-size: 14px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.stat-card { background: var(--card); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #334155; transition: transform 0.2s; }
+.stat-card:hover { transform: translateY(-4px); border-color: #475569; }
+.stat-card .num { font-size: 36px; font-weight: 700; margin-bottom: 4px; }
+.stat-card .label { color: var(--muted); font-size: 14px; }
+.stat-card.total .num { color: var(--accent); }
+.stat-card.done .num { color: #10b981; }
+.stat-card.progress .num { color: #f59e0b; }
+.stat-card.hold .num { color: #ef4444; }
+.section { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #334155; }
+.section h2 { font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section h2::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--accent); border-radius: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #334155; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; background: #0f172a; position: sticky; top: 0; }
+tr:hover td { background: #252f47; }
+.priority { font-weight: 700; font-size: 11px; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+.priority.p0 { background: #fee2e2; color: #b91c1c; }
+.priority.p1 { background: #fef3c7; color: #b45309; }
+.status-tag { font-size: 12px; padding: 2px 8px; border-radius: 12px; font-weight: 600; display: inline-block; white-space: nowrap; }
+.scroll { max-height: 400px; overflow-y: auto; border-radius: 8px; }
+.footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 32px; padding-bottom: 24px; }
+</style>
 </head>
 <body>
-    <div class="dashboard-header">
-        <h1>App产品功能需求及迭代进展</h1>
-        <div class="subtitle">学分商城 · 需求产研进度追踪</div>
-    </div>
-    <div class="stats-grid">
-        <div class="stat-card total"><div class="stat-number">24</div><div class="stat-label">需求总数</div></div>
-        <div class="stat-card online"><div class="stat-number">7</div><div class="stat-label">已上线</div></div>
-        <div class="stat-card dev"><div class="stat-number">2</div><div class="stat-label">开发中</div></div>
-        <div class="stat-card review"><div class="stat-number">4</div><div class="stat-label">已内审/待评审</div></div>
-        <div class="stat-card pending"><div class="stat-number">10</div><div class="stat-label">未规划</div></div>
-        <div class="stat-card paused"><div class="stat-number">1</div><div class="stat-label">挂起</div></div>
-    </div>
-    <div class="progress-bar-container">
-        <h3>整体进度</h3>
-        <div class="progress-bar">
-            <div class="progress-segment online" style="width: 29.2%">29%</div>
-            <div class="progress-segment dev" style="width: 8.3%"></div>
-            <div class="progress-segment review" style="width: 16.7%">17%</div>
-            <div class="progress-segment paused" style="width: 4.2%"></div>
-            <div class="progress-segment unplanned" style="width: 41.6%">42%</div>
-        </div>
-        <div class="progress-legend">
-            <div class="legend-item"><div class="legend-dot" style="background: var(--success)"></div>已上线 (7)</div>
-            <div class="legend-item"><div class="legend-dot" style="background: var(--warning)"></div>开发中 (2)</div>
-            <div class="legend-item"><div class="legend-dot" style="background: var(--purple)"></div>已内审/待评审 (4)</div>
-            <div class="legend-item"><div class="legend-dot" style="background: var(--danger)"></div>挂起 (1)</div>
-            <div class="legend-item"><div class="legend-dot" style="background: #dadce0"></div>未规划 (10)</div>
-        </div>
-    </div>
-    <div class="version-sections">
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-base">基础能力</span> 自研学分商城</h3>
-                <span class="version-progress">2/2 已上线</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">学分商城替换自研实物商城</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">学分商城支持支付能力（支付宝）</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">4.17</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.0</h3>
-                <span class="version-progress">3/3 已上线</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">手动支持学分扣减</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">实物商品订单增加部分字段（主订单ID、spu、sku名称筛选）、导出数据</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">5.8</span></div>
-                <div class="requirement-item"><span class="req-name">学分商城库存能力（业务端先闭环）</span><span class="req-priority p0">P0</span><span class="req-status online">已上线</span><span class="req-timeline">5.8</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.1</h3>
-                <span class="version-progress">1/2 已上线 · 1 挂起</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">学分商城支持支付能力（h5微信）</span><span class="req-priority none"></span><span class="req-status paused">挂起</span><span class="req-timeline">5.13</span></div>
-                <div class="requirement-item"><span class="req-name">app签到埋点补充（首页入口区分类型及实验组和对照组）</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">5.13</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.2</h3>
-                <span class="version-progress">2 开发中 · 2 待评审 · 1 未规划</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">学分商城&详情页支持分享（增加'活动限定'标识）</span><span class="req-priority none"></span><span class="req-status dev">开发中</span><span class="req-timeline">6.3/6.8</span></div>
-                <div class="requirement-item"><span class="req-name">学分商城接入微信app原生支付能力</span><span class="req-priority p0">P0</span><span class="req-status dev">开发中</span><span class="req-timeline">6.8</span></div>
-                <div class="requirement-item"><span class="req-name">学分商城接入支付宝app原生支付能力</span><span class="req-priority p0">P0</span><span class="req-status review">已内审，待评审</span><span class="req-timeline">6月</span></div>
-                <div class="requirement-item"><span class="req-name">学分商城报表&埋点补充</span><span class="req-priority p1">P1</span><span class="req-status review">已内审，待评审</span><span class="req-timeline">6月</span></div>
-                <div class="requirement-item"><span class="req-name">学分商城区分入口参数</span><span class="req-priority p1">P1</span><span class="req-status unplanned">未规划</span><span class="req-timeline">5月</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.3</h3>
-                <span class="version-progress">1 待评审 · 1 未规划</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">学分商城详情页改版，支持多规格（sku）选择及单商品多次购买</span><span class="req-priority p0">P0</span><span class="req-status review">已内审，待评审</span><span class="req-timeline">6月</span></div>
-                <div class="requirement-item"><span class="req-name">实物+虚拟商品组合（买实物后强制领取课程）</span><span class="req-priority p1">P1</span><span class="req-status unplanned">未规划</span><span class="req-timeline">6月</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-base">基础能力</span> 基础治理V1.4</h3>
-                <span class="version-progress">已内审</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">鸿蒙系统支持华为帐户登录，支持鸿蒙系统用户使用微信支付方式下单</span><span class="req-priority p0">P0</span><span class="req-status review">已内审</span><span class="req-timeline">6月</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-after">基础能力</span> 用户线上自主售后</h3>
-                <span class="version-progress">2 未规划</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">业务端仅售后能力（仅退款，用户端和系统端）</span><span class="req-priority p0">P0</span><span class="req-status unplanned">未规划</span><span class="req-timeline">6月</span></div>
-                <div class="requirement-item"><span class="req-name">售后能力（退款退货、换货）</span><span class="req-priority p0">P0</span><span class="req-status unplanned">未规划</span><span class="req-timeline">6月</span></div>
-            </div>
-        </div>
-        <div class="version-section">
-            <div class="version-header">
-                <h3><span class="version-badge cat-market">商城营销玩法</span> 兑换实物赠课 & 营销工具</h3>
-                <span class="version-progress">1/7 已上线 · 6 未规划</span>
-            </div>
-            <div class="requirement-list">
-                <div class="requirement-item"><span class="req-name">学分商城增加用户兑换实物商品礼包（弹窗赠课）</span><span class="req-priority none"></span><span class="req-status online">已上线</span><span class="req-timeline">5.8</span></div>
-                <div class="requirement-item"><span class="req-name">商品精细化区分，折扣/福利专区建设，商品分类tab</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">商品组件：划线价、活动倒计时、限时抢购、名额剩余</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">学分商城增加banner广告位</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">积分获取导流路径（引导参加任务获取积分）</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">抽奖工具</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
-                <div class="requirement-item"><span class="req-name">其他（需与业务共识策略，倒推产品功能需求）</span><span class="req-priority none"></span><span class="req-status unplanned">未规划</span><span class="req-timeline"></span></div>
-            </div>
-        </div>
-    </div>
-    <div class="update-time">数据更新时间：2026-05-28 · 数据来源：企业微信文档「需求产研进度」</div>
+<div class="container">
+<header>
+<h1>产品需求进度看板</h1>
+<p>更新时间：2026-05-29 17:06 | 数据来源：企业微信文档</p>
+</header>
+
+<div class="stats">
+<div class="stat-card total">
+<div class="num">33</div>
+<div class="label">需求总数</div>
+</div>
+<div class="stat-card done">
+<div class="num">10</div>
+<div class="label">已上线/过渡上线</div>
+</div>
+<div class="stat-card progress">
+<div class="num">6</div>
+<div class="label">进行中</div>
+</div>
+<div class="stat-card hold">
+<div class="num">17</div>
+<div class="label">待规划/挂起</div>
+</div>
+</div>
+
+<div class="section">
+<h2>各状态明细</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>状态</th><th>数量</th><th>占比</th></tr></thead>
+<tbody>
+<tr><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td>14</td><td>42.4%</td></tr>
+<tr><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>8</td><td>24.2%</td></tr>
+<tr><td><span style="background:#34d39920;color:#34d399;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #34d39940;">已上线(待提审/可用)</span></td><td>2</td><td>6.1%</td></tr>
+<tr><td><span style="background:#6b728020;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6b728040;">待规划</span></td><td>2</td><td>6.1%</td></tr>
+<tr><td><span style="background:#ef444420;color:#ef4444;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #ef444440;">挂起</span></td><td>1</td><td>3.0%</td></tr>
+<tr><td><span style="background:#8b5cf620;color:#8b5cf6;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #8b5cf640;">已内审，待评审</span></td><td>1</td><td>3.0%</td></tr>
+<tr><td><span style="background:#3b82f620;color:#3b82f6;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #3b82f640;">UI设计中</span></td><td>1</td><td>3.0%</td></tr>
+<tr><td><span style="background:#6366f120;color:#6366f1;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6366f140;">已评审</span></td><td>1</td><td>3.0%</td></tr>
+<tr><td><span style="background:#a78bfa20;color:#a78bfa;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #a78bfa40;">待内审</span></td><td>1</td><td>3.0%</td></tr>
+<tr><td><span style="background:#f59e0b20;color:#f59e0b;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #f59e0b40;">产品方案中</span></td><td>1</td><td>3.0%</td></tr>
+<tr><td><span style="background:#f9731620;color:#f97316;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #f9731640;">待运营输出规则</span></td><td>1</td><td>3.0%</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2>P0 重点关注需求</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>版本/归属</th><th>需求</th><th>进度</th><th>预估上线</th></tr></thead>
+<tbody>
+<tr><td></td><td>学分商城库存能力（业务端先闭环），等基建6月实现对接聚水潭库存能力再次更新</td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>5.8</td></tr>
+<tr><td></td><td>学分商城接入微信app原生支付能力</td><td><span style="background:#34d39920;color:#34d399;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #34d39940;">已上线(待提审/可用)</span></td><td>6.3</td></tr>
+<tr><td></td><td>学分商城接入支付宝app原生支付能力</td><td><span style="background:#8b5cf620;color:#8b5cf6;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #8b5cf640;">已内审，待评审</span></td><td>6月</td></tr>
+<tr><td>基础治理V1.3</td><td>学分商城详情页改版，支持多规格（sku）选择以及支持单商品多次购买（主图尺寸问题）</td><td><span style="background:#3b82f620;color:#3b82f6;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #3b82f640;">UI设计中</span></td><td>6月19左右</td></tr>
+<tr><td>基础治理V1.4</td><td>鸿蒙系统支持华为帐户登录，支持鸿蒙系统用户使用微信支付方式下单</td><td><span style="background:#6366f120;color:#6366f1;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6366f140;">已评审</span></td><td>6月</td></tr>
+<tr><td>基础治理V1.6</td><td>定向人群展示商城商品以及购买权限（非定向人群做隐藏商品）</td><td><span style="background:#f59e0b20;color:#f59e0b;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #f59e0b40;">产品方案中</span></td><td>6月底左右</td></tr>
+<tr><td>基础治理V1.7</td><td>新增学分任务行为（需定义任务行为和定义）</td><td><span style="background:#f9731620;color:#f97316;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #f9731640;">待运营输出规则</span></td><td>6月底左右</td></tr>
+<tr><td>用户线上自主售后</td><td>业务端仅售后能力（仅退款，用户端和系统端）</td><td><span style="background:#6b728020;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6b728040;">待规划</span></td><td>6月</td></tr>
+<tr><td></td><td>售后能力（退款退货、换货）</td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td>6月</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2>P1 需求</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>版本/归属</th><th>需求</th><th>进度</th><th>预估上线</th></tr></thead>
+<tbody>
+<tr><td></td><td>学分商城报表&埋点补充（学分商城相关埋点先行——511已内审待评审）</td><td><span style="background:#34d39920;color:#34d399;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #34d39940;">已上线(待提审/可用)</span></td><td>埋点：6.3上线;报表：6月15左右</td></tr>
+<tr><td></td><td>学分商城区分入口参数</td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td>5月</td></tr>
+<tr><td>基础治理V1.5</td><td>兑换管理处的按钮功能需做成权限控制</td><td><span style="background:#a78bfa20;color:#a78bfa;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #a78bfa40;">待内审</span></td><td>6月10号左右</td></tr>
+<tr><td>急促治理V1.8</td><td>组合实物/组合虚拟/实物+虚拟商品售卖</td><td><span style="background:#6b728020;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6b728040;">待规划</span></td><td>暂定</td></tr>
+<tr><td>业务提需池</td><td>整体的用户学分看板</td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2>全部需求列表</h2>
+<div class="scroll">
+<table>
+<thead><tr><th>版本/归属</th><th>需求</th><th>优先级</th><th>进度</th><th>预估上线</th></tr></thead>
+<tbody>
+<tr><td></td><td>学分商城库存能力（业务端先闭环），等基建6月实现对接聚水潭库存能力再次更新</td><td><span class="priority p0">p0</span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>5.8</td></tr>
+<tr><td></td><td>学分商城接入微信app原生支付能力</td><td><span class="priority p0">p0</span></td><td><span style="background:#34d39920;color:#34d399;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #34d39940;">已上线(待提审/可用)</span></td><td>6.3</td></tr>
+<tr><td></td><td>学分商城接入支付宝app原生支付能力</td><td><span class="priority p0">p0</span></td><td><span style="background:#8b5cf620;color:#8b5cf6;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #8b5cf640;">已内审，待评审</span></td><td>6月</td></tr>
+<tr><td>基础治理V1.3</td><td>学分商城详情页改版，支持多规格（sku）选择以及支持单商品多次购买（主图尺寸问题）</td><td><span class="priority p0">p0</span></td><td><span style="background:#3b82f620;color:#3b82f6;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #3b82f640;">UI设计中</span></td><td>6月19左右</td></tr>
+<tr><td>基础治理V1.4</td><td>鸿蒙系统支持华为帐户登录，支持鸿蒙系统用户使用微信支付方式下单</td><td><span class="priority p0">p0</span></td><td><span style="background:#6366f120;color:#6366f1;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6366f140;">已评审</span></td><td>6月</td></tr>
+<tr><td>基础治理V1.6</td><td>定向人群展示商城商品以及购买权限（非定向人群做隐藏商品）</td><td><span class="priority p0">p0</span></td><td><span style="background:#f59e0b20;color:#f59e0b;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #f59e0b40;">产品方案中</span></td><td>6月底左右</td></tr>
+<tr><td>基础治理V1.7</td><td>新增学分任务行为（需定义任务行为和定义）</td><td><span class="priority p0">p0</span></td><td><span style="background:#f9731620;color:#f97316;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #f9731640;">待运营输出规则</span></td><td>6月底左右</td></tr>
+<tr><td>用户线上自主售后</td><td>业务端仅售后能力（仅退款，用户端和系统端）</td><td><span class="priority p0">p0</span></td><td><span style="background:#6b728020;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6b728040;">待规划</span></td><td>6月</td></tr>
+<tr><td></td><td>售后能力（退款退货、换货）</td><td><span class="priority p0">p0</span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td>6月</td></tr>
+<tr><td></td><td>学分商城报表&埋点补充（学分商城相关埋点先行——511已内审待评审）</td><td><span class="priority p1">p1</span></td><td><span style="background:#34d39920;color:#34d399;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #34d39940;">已上线(待提审/可用)</span></td><td>埋点：6.3上线;报表：6月15左右</td></tr>
+<tr><td></td><td>学分商城区分入口参数</td><td><span class="priority p1">p1</span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td>5月</td></tr>
+<tr><td>基础治理V1.5</td><td>兑换管理处的按钮功能需做成权限控制</td><td><span class="priority p1">p1</span></td><td><span style="background:#a78bfa20;color:#a78bfa;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #a78bfa40;">待内审</span></td><td>6月10号左右</td></tr>
+<tr><td>急促治理V1.8</td><td>组合实物/组合虚拟/实物+虚拟商品售卖</td><td><span class="priority p1">p1</span></td><td><span style="background:#6b728020;color:#6b7280;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #6b728040;">待规划</span></td><td>暂定</td></tr>
+<tr><td>业务提需池</td><td>整体的用户学分看板</td><td><span class="priority p1">P1</span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td>自研学分商城</td><td>学分商城替换自研实物商城</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td></td></tr>
+<tr><td></td><td>学分商城支持支付能力（支付宝）</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>4.17</td></tr>
+<tr><td>基础治理V1.0</td><td>手动支持学分扣减</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td></td></tr>
+<tr><td></td><td>实物商品订单增加部分字段（主订单ID、spu、sku名称筛选）、导出数据</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>5.8</td></tr>
+<tr><td>基础治理V1.1</td><td>学分商城支持支付能力（h5微信）</td><td><span class="priority "></span></td><td><span style="background:#ef444420;color:#ef4444;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #ef444440;">挂起</span></td><td>5.13</td></tr>
+<tr><td></td><td>app签到埋点补充（首页的入口区分类型及实验组和对照组、app签到页面pv、uv）</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>5.13</td></tr>
+<tr><td>基础治理V1.2</td><td>学分商城&详情页支持分享（增加兑换商品用户人群限定时候，增加‘活动限定’标识）</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>过度方案：528;完整方案：6.3</td></tr>
+<tr><td></td><td>实物+虚拟商品组合（买实物后自动领取课程，用户兑换礼包赠送弹窗支持虚拟商品）</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>学分商城赠课弹窗相关埋点</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>商品售空状态调整</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>现有成长任务调整学分发放数值和学分定价</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>支持用户修改地址（针对未发货状态支持修改）</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td>兑换实物赠课</td><td>学分商城增加用户兑换实物商品礼包（弹窗赠课）</td><td><span class="priority "></span></td><td><span style="background:#10b98120;color:#10b981;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #10b98140;">已上线</span></td><td>5.8</td></tr>
+<tr><td></td><td>商品精细化区分，折扣/福利专区建设， 商品分类tab：养生/变美/虚拟</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>商品组件：划线价、活动倒计时、商品名换行、限时抢购、名额剩余</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>学分商城增加banner广告位</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>积分获取导流路径（积分不足，引导参加任务获取积分）</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>抽奖工具</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+<tr><td></td><td>其他（需与业务共识策略，倒推产品功能需求）</td><td><span class="priority "></span></td><td><span style="background:#9ca3af20;color:#9ca3af;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600;border:1px solid #9ca3af40;">未开始/待规划</span></td><td></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="footer">
+<p>看板由 QoderWork 自动生成 | 仓库: wll1220512/product-dashboard</p>
+</div>
+</div>
 </body>
 </html>
